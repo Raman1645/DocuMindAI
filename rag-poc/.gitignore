@@ -1,0 +1,38 @@
+# Ignore documentation directory
+docs/
+
+# Environment variables & API keys (Never commit secrets)
+.env
+.env.local
+*.env
+
+# Python Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+
+# Python Byte Code & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Vector Databases & Local Runtime Stores (Generated dynamically)
+chroma_db/
+chroma_*_db/
+chroma_test_db/
+chroma_eval_db/
+chroma_gen_test_db/
+chroma_hybrid_test_db/
+chroma_rerank_test_db/
+*.sqlite3
+
+# IDE & OS specific files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log

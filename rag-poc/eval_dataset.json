@@ -1,0 +1,22 @@
+[
+  {
+    "question": "What are the core collaboration hours for remote workers?",
+    "ground_truth": "All employees must maintain presence on Slack and corporate email between 10:00 AM and 4:00 PM EST."
+  },
+  {
+    "question": "What is the home office hardware setup stipend?",
+    "ground_truth": "Full-time employees receive a one-time setup stipend of $500 to purchase ergonomic desks, monitors, or chairs."
+  },
+  {
+    "question": "What network security rule applies when connecting to public Wi-Fi?",
+    "ground_truth": "Public Wi-Fi networks in coffee shops, hotels, or airports must strictly be accessed through an encrypted VPN tunnel."
+  },
+  {
+    "question": "How many days of paid time off do full-time employees receive annually?",
+    "ground_truth": "Full-time employees receive 20 days of Paid Time Off (PTO) per calendar year."
+  },
+  {
+    "question": "When do bi-annual performance evaluations take place?",
+    "ground_truth": "Bi-annual performance evaluations take place in June and December."
+  }
+]
