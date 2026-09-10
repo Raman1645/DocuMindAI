@@ -22,13 +22,14 @@ htmlcov/
 
 # Vector Databases & Local Runtime Stores (Generated dynamically)
 chroma_db/
-chroma_*_db/
-chroma_test_db/
-chroma_eval_db/
-chroma_gen_test_db/
-chroma_hybrid_test_db/
-chroma_rerank_test_db/
+chroma_*/
 *.sqlite3
+
+# User Uploaded Documents & Local Registry (sample_data/ is tracked)
+data/*.pdf
+data/*.txt
+data/document_registry.json
+!data/.gitkeep
 
 # IDE & OS specific files
 .vscode/

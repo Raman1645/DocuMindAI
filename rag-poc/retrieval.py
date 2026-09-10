@@ -254,6 +254,80 @@ def retrieve_and_rerank(
     return reranked_results
 
 
+def retrieve_by_mode(
+    mode: str,
+    query: str,
+    documents: List[Document],
+    bm25_index: BM25Okapi,
+    top_k: int = TOP_N_RERANK,
+    top_k_dense: int = TOP_K_DENSE,
+    top_k_bm25: int = TOP_K_BM25,
+    persist_directory: str = None,
+    collection_name: str = None,
+) -> List[Tuple[Document, float]]:
+    """
+    Executes retrieval under a specific configuration mode for ablation testing:
+    - 'dense': Dense vector similarity search only (ChromaDB + BGE-small).
+    - 'bm25': BM25Okapi sparse lexical search only.
+    - 'hybrid': Dense + BM25 combined via Reciprocal Rank Fusion (RRF).
+    - 'hybrid_rerank': Dense + BM25 RRF + Cross-Encoder Reranking (ms-marco-MiniLM-L-6-v2).
+
+    Args:
+        mode: Retrieval strategy mode ('dense', 'bm25', 'hybrid', 'hybrid_rerank').
+        query: User search question string.
+        documents: List of all chunked Document objects.
+        bm25_index: Pre-built BM25Okapi index.
+        top_k: Final number of candidate chunks to return.
+        top_k_dense: Number of dense vectors to retrieve for hybrid/dense candidates.
+        top_k_bm25: Number of BM25 candidates to retrieve for hybrid/bm25.
+        persist_directory: ChromaDB directory path.
+        collection_name: ChromaDB collection name.
+
+    Returns:
+        List[Tuple[Document, float]]: Top-K (Document, score) pairs.
+    """
+    kwargs = {}
+    if persist_directory:
+        kwargs["persist_directory"] = persist_directory
+    if collection_name:
+        kwargs["collection_name"] = collection_name
+
+    mode_lower = mode.lower().strip()
+
+    if mode_lower == "dense":
+        return dense_similarity_search(query, top_k=top_k, **kwargs)
+
+    elif mode_lower == "bm25":
+        return bm25_search(query, documents, bm25_index, top_k=top_k)
+
+    elif mode_lower == "hybrid":
+        results = hybrid_retrieval(
+            query=query,
+            documents=documents,
+            bm25_index=bm25_index,
+            top_k_dense=top_k_dense,
+            top_k_bm25=top_k_bm25,
+            **kwargs,
+        )
+        return results[:top_k]
+
+    elif mode_lower in ("hybrid_rerank", "hybrid_reranker", "full"):
+        return retrieve_and_rerank(
+            query=query,
+            documents=documents,
+            bm25_index=bm25_index,
+            top_k_dense=top_k_dense,
+            top_k_bm25=top_k_bm25,
+            top_n_rerank=top_k,
+            **kwargs,
+        )
+
+    else:
+        raise ValueError(
+            f"Unsupported retrieval mode '{mode}'. Supported modes: 'dense', 'bm25', 'hybrid', 'hybrid_rerank'."
+        )
+
+
 if __name__ == "__main__":
     import shutil
     from ingestion import ingest_file

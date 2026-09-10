@@ -1,0 +1,24 @@
+# ACME Corp Engineering & Technical Operations Handbook
+
+1. Code Review & Pull Request Standards
+All production code changes require a minimum of two approving peer reviews before merging into the main branch.
+Continuous Integration (CI) test suites and static analysis linters must pass with 100% success rate.
+Pull requests should not exceed 400 lines of modified code to ensure thorough and attentive review.
+
+2. On-Call Rotations & Compensation
+Engineering on-call rotations operate on a 7-day weekly cycle starting Tuesdays at 10:00 AM EST.
+Engineers on primary rotation receive a weekly base on-call stipend of $300.
+If an engineer is called to resolve an incident on an official corporate holiday, an additional $100 per holiday shift is compensated.
+Secondary on-call engineers receive a $150 weekly stipend for standby escalation.
+
+3. Incident Severity Levels & Response SLAs
+Incident severity classifications dictate team response times:
+- SEV-1 (Critical outage affecting >25% of users): Initial response within 15 minutes, updates every 30 minutes.
+- SEV-2 (Major degradation of core feature): Initial response within 30 minutes, updates every 1 hour.
+- SEV-3 (Minor non-critical bug): Initial response within 4 hours during business hours.
+- SEV-4 (Cosmetic / low priority issue): Handled in standard sprint planning.
+
+4. Production Release & Deployment Freezes
+Standard deployment windows are Monday through Thursday between 9:00 AM and 2:00 PM EST.
+Friday deployments are prohibited except for critical SEV-1 emergency hotfixes.
+An annual year-end deployment freeze is enforced from December 15 through January 3 to protect holiday system stability.

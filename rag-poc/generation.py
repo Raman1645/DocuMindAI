@@ -7,7 +7,7 @@ with inline source citations ([Source 1], [Source 2]) and an explicit fallback s
 
 import os
 import re
-from typing import List, Tuple, Dict, Any
+from typing import List, Tuple, Dict, Any, Optional
 
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.messages import HumanMessage, AIMessage
@@ -15,54 +15,33 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.documents import Document
 from langchain_openai import ChatOpenAI
 
-from config import DEFAULT_LLM_MODEL, DEFAULT_LLM_TEMPERATURE
+from config import (
+    DEFAULT_LLM_MODEL,
+    DEFAULT_LLM_TEMPERATURE,
+    CONFIDENCE_THRESHOLD,
+    ENABLE_ANSWER_VERIFIER,
+)
+from llm_factory import create_llm
+from confidence import check_retrieval_confidence
+from verifier import verify_grounded_answer
 
 
-def get_llm(model_name: str = DEFAULT_LLM_MODEL, temperature: float = DEFAULT_LLM_TEMPERATURE):
+def get_llm(
+    model_name: str = DEFAULT_LLM_MODEL,
+    provider: Optional[str] = None,
+    temperature: float = DEFAULT_LLM_TEMPERATURE,
+    max_tokens: int = 350,
+):
     """
-    Initializes the LLM instance.
-    Supports Groq (ChatGroq) via GROQ_API_KEY and OpenAI (ChatOpenAI) via OPENAI_API_KEY.
+    Initializes the LLM instance using the pluggable llm_factory.
+    Supports Groq, Ollama (local), OpenAI, and deterministic Mock fallback.
     """
-    # Load .env variables if present
-    try:
-        from dotenv import load_dotenv
-        load_dotenv()
-    except ImportError:
-        pass
-        
-    groq_api_key = os.getenv("GROQ_API_KEY")
-    openai_api_key = os.getenv("OPENAI_API_KEY")
-    target_model = os.getenv("LLM_MODEL_NAME", model_name)
-    
-    if groq_api_key:
-        try:
-            from langchain_groq import ChatGroq
-            return ChatGroq(
-                model_name=target_model,
-                temperature=temperature,
-                groq_api_key=groq_api_key,
-            )
-        except ImportError:
-            print("[WARNING] 'langchain-groq' package not found. Run 'pip install langchain-groq' to use Groq API.")
-            
-    if openai_api_key:
-        return ChatOpenAI(
-            model=target_model if "gpt" in target_model else "gpt-3.5-turbo",
-            temperature=temperature,
-            api_key=openai_api_key,
-        )
-        
-    # Fallback Runnable Mock LLM for offline testing if no API key or package is present
-    from langchain_core.runnables import RunnableLambda
-    
-    def mock_predict(prompt_input):
-        return (
-            "Based on the provided policy document, all full-time employees are eligible for a "
-            "one-time home office setup stipend of $500 to purchase ergonomic equipment [Source 1]. "
-            "Additionally, remote workers must use the corporate VPN when accessing customer data [Source 2]."
-        )
-        
-    return RunnableLambda(mock_predict)
+    return create_llm(
+        provider=provider,
+        model_name=model_name,
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
 
 
 def format_context_chunks(retrieved_chunks: List[Tuple[Document, float]]) -> str:
@@ -115,16 +94,15 @@ def get_rag_prompt_template() -> ChatPromptTemplate:
     Constructs the citation-enforcing RAG system prompt with conversational memory placeholder.
     """
     system_prompt = (
-        "You are a factual, precise Document Q&A assistant.\n"
-        "Answer the user's question STRICTLY using only the provided context chunks below.\n\n"
+        "You are a precise, factual Document Q&A assistant.\n"
+        "Answer the question directly and concisely using ONLY the provided context chunks below.\n\n"
         "Rules:\n"
-        "1. Base your answer ONLY on facts directly stated in the context. Do NOT use outside knowledge.\n"
-        "2. If the context does not contain sufficient information to answer the question, state clearly:\n"
+        "1. Base your answer strictly on the facts present in the Context Chunks. Do not introduce outside information or assumptions.\n"
+        "2. For every factual claim, cite the supporting context chunk using inline brackets, e.g., [Source 1] or [Source 2].\n"
+        "3. When multiple context chunks provide complementary information, synthesize them into a single coherent answer.\n"
+        "4. If the Context Chunks do not contain sufficient evidence to answer the question, respond with exact text:\n"
         '   "I don\'t know based on the provided documents."\n'
-        "3. For every claim or factual statement in your answer, cite the supporting source chunk(s)\n"
-        "   using inline brackets, e.g., [Source 1] or [Source 2].\n"
-        "4. Consider recent conversation history for context when resolving pronouns or follow-up questions.\n"
-        "5. Keep the answer concise, professional, and directly focused on the user's query.\n\n"
+        "5. Do NOT include any internal thought process, prefixes, or conversational filler. Output only the final answer.\n\n"
         "Context Chunks:\n"
         "{context}"
     )
@@ -137,11 +115,56 @@ def get_rag_prompt_template() -> ChatPromptTemplate:
     return prompt
 
 
+def sanitize_model_output(raw_output: str) -> str:
+    """
+    Robustly cleans and sanitizes raw LLM generation outputs.
+    
+    Removes:
+    1. Complete <think>...</think> blocks (case-insensitive, multiline).
+    2. Unclosed <think>... blocks caused by token truncation.
+    3. Stray closing </think> tags.
+    4. Reasoning prefixes (e.g. 'Thought:', 'Thinking Process:', 'Reasoning:').
+    5. Preserves valid inline citations [Source X], markdown formatting, and abstention statements.
+    
+    Returns:
+        str: Clean, sanitized user-facing answer string.
+    """
+    if not raw_output:
+        return "I don't know based on the provided documents."
+        
+    text = str(raw_output)
+    
+    # 1. Strip complete <think>...</think> blocks (case-insensitive)
+    text = re.sub(r"<\s*think\s*>.*?<\s*/\s*think\s*>", "", text, flags=re.DOTALL | re.IGNORECASE)
+    
+    # 2. Strip unclosed <think>... blocks (e.g. truncated generation)
+    text = re.sub(r"<\s*think\s*>.*", "", text, flags=re.DOTALL | re.IGNORECASE)
+    
+    # 3. Strip any stray closing tags
+    text = re.sub(r"<\s*/\s*think\s*>", "", text, flags=re.IGNORECASE)
+    
+    # 4. Strip common reasoning prefixes at the start of output if present
+    reasoning_prefix_pattern = r"^(?:thought|thinking process|internal analysis|reasoning):\s*.*?\n\n"
+    text = re.sub(reasoning_prefix_pattern, "", text, flags=re.DOTALL | re.IGNORECASE)
+    
+    # 5. Clean up leading/trailing whitespace
+    text = text.strip()
+    
+    # 6. Fallback if entire output was empty or consumed by thinking
+    if not text:
+        text = "I don't know based on the provided documents."
+        
+    return text
+
+
 def generate_answer(
     query: str,
     retrieved_chunks: List[Tuple[Document, float]],
     chat_history: List[Dict[str, Any]] = None,
     model_name: str = DEFAULT_LLM_MODEL,
+    provider: Optional[str] = None,
+    temperature: float = DEFAULT_LLM_TEMPERATURE,
+    max_tokens: int = 1024,
 ) -> Dict[str, Any]:
     """
     Executes the generation chain using retrieved chunks, conversation history, and prompt template.
@@ -151,28 +174,74 @@ def generate_answer(
         retrieved_chunks: Top-N reranked (Document, score) pairs from retrieval module.
         chat_history: List of previous conversation message dicts.
         model_name: Name of the target LLM.
+        provider: 'ollama', 'groq', 'openai', or 'mock'.
+        temperature: Sampling temperature.
+        max_tokens: Output token limit.
         
     Returns:
         Dict[str, Any]: Dictionary containing 'answer' text and 'sources' metadata list.
     """
+    # Step 1: Guardrail - Confidence-Aware Abstention Check
+    is_confident, max_score, abstention_msg = check_retrieval_confidence(
+        retrieved_chunks, threshold=CONFIDENCE_THRESHOLD
+    )
+    if not is_confident:
+        return {
+            "answer": abstention_msg,
+            "sources": [],
+            "context_str": "",
+            "is_confident": False,
+            "max_relevance_score": max_score,
+            "verification": {
+                "is_verified": True,
+                "status": "abstained_low_confidence",
+                "total_citations": 0,
+                "valid_citations": 0,
+            },
+        }
+
+    # Step 2: Generation via LCEL
     formatted_context = format_context_chunks(retrieved_chunks)
     formatted_history = convert_chat_history(chat_history)
     prompt_template = get_rag_prompt_template()
-    llm = get_llm(model_name)
+    llm = get_llm(model_name=model_name, provider=provider, temperature=temperature, max_tokens=max_tokens)
     
-    # Check if we are using LCEL or Mock fallback
-    if hasattr(llm, "invoke"):
-        chain = prompt_template | llm | StrOutputParser()
-        answer_text = chain.invoke({
-            "context": formatted_context,
-            "chat_history": formatted_history,
-            "question": query,
-        })
-    else:
-        answer_text = llm.invoke(formatted_context)
+    try:
+        if hasattr(llm, "invoke"):
+            chain = prompt_template | llm | StrOutputParser()
+            raw_output = chain.invoke({
+                "context": formatted_context,
+                "chat_history": formatted_history,
+                "question": query,
+            })
+        else:
+            raw_output = llm.invoke(formatted_context)
+            
+        answer_text = sanitize_model_output(raw_output)
+    except Exception as e:
+        err_msg = str(e)
+        active_prov = str(provider or "default")
+        active_mod = str(model_name or "default")
+        print(f"[GENERATION ERROR] Provider: {active_prov}, Model: {active_mod}, Details: {err_msg}")
         
-    # Clean up internal reasoning traces (e.g. <think>...</think>) from reasoning models
-    answer_text = re.sub(r"<think>.*?</think>", "", str(answer_text), flags=re.DOTALL).strip()
+        if "429" in err_msg or "RESOURCE_EXHAUSTED" in err_msg or "rate limit" in err_msg.lower():
+            answer_text = (
+                f"⚠️ **Rate limit encountered on {active_prov.upper()} ({active_mod}).**\n\n"
+                f"Please switch the model in the sidebar to **Groq (`llama-3.3-70b-versatile`)** or **Mock** for instant generation."
+            )
+        else:
+            answer_text = (
+                f"⚠️ **Provider Error ({active_prov.upper()} / {active_mod}):** {err_msg[:120]}"
+            )
+        
+        return {
+            "answer": answer_text,
+            "sources": [],
+            "context_str": formatted_context,
+            "is_confident": False,
+            "max_relevance_score": max_score,
+            "verification": {"is_verified": False, "status": "provider_error"},
+        }
         
     # Build structured sources metadata list for UI presentation
     sources = []
@@ -186,10 +255,18 @@ def generate_answer(
             "content": doc.page_content,
         })
         
+    # Step 3: Guardrail - Post-Generation Verification
+    verification_report = {}
+    if ENABLE_ANSWER_VERIFIER:
+        verification_report = verify_grounded_answer(answer_text, retrieved_chunks)
+        
     return {
         "answer": answer_text,
         "sources": sources,
         "context_str": formatted_context,
+        "is_confident": True,
+        "max_relevance_score": max_score,
+        "verification": verification_report,
     }
 
 

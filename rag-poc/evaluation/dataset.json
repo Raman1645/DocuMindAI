@@ -1,0 +1,729 @@
+[
+  {
+    "id": "SF01",
+    "category": "simple_factual",
+    "question": "What is the home office hardware setup stipend for full-time employees?",
+    "ground_truth": "All full-time employees are eligible for a one-time setup stipend of $500 to purchase ergonomic desks, monitors, or chairs.",
+    "target_sources": ["company_policy.txt"],
+    "expected_keywords": ["$500", "stipend", "ergonomic", "hardware"],
+    "is_answerable": true
+  },
+  {
+    "id": "SF02",
+    "category": "simple_factual",
+    "question": "What are the required core working hours for ACME Corp employees?",
+    "ground_truth": "Employees must maintain presence on Slack and corporate email between 10:00 AM and 4:00 PM EST.",
+    "target_sources": ["company_policy.txt"],
+    "expected_keywords": ["10:00 AM", "4:00 PM", "EST", "Slack", "core"],
+    "is_answerable": true
+  },
+  {
+    "id": "SF03",
+    "category": "simple_factual",
+    "question": "How many days of paid time off (PTO) do full-time employees receive annually?",
+    "ground_truth": "Full-time employees receive 20 days of Paid Time Off (PTO) per calendar year.",
+    "target_sources": ["employee_handbook.pdf"],
+    "expected_keywords": ["20 days", "PTO", "paid time off", "calendar year"],
+    "is_answerable": true
+  },
+  {
+    "id": "SF04",
+    "category": "simple_factual",
+    "question": "In which months do bi-annual performance evaluations take place?",
+    "ground_truth": "Bi-annual performance evaluations take place in June and December.",
+    "target_sources": ["employee_handbook.pdf"],
+    "expected_keywords": ["June", "December", "performance evaluations"],
+    "is_answerable": true
+  },
+  {
+    "id": "SF05",
+    "category": "simple_factual",
+    "question": "What is the minimum number of peer reviews required before merging a pull request?",
+    "ground_truth": "All production code changes require a minimum of two approving peer reviews before merging into main.",
+    "target_sources": ["engineering_handbook.txt"],
+    "expected_keywords": ["two", "approving", "peer reviews", "pull request"],
+    "is_answerable": true
+  },
+  {
+    "id": "SF06",
+    "category": "simple_factual",
+    "question": "What is the base weekly stipend for an engineer on primary on-call rotation?",
+    "ground_truth": "Engineers on primary rotation receive a weekly base on-call stipend of $300.",
+    "target_sources": ["engineering_handbook.txt"],
+    "expected_keywords": ["$300", "weekly", "primary", "on-call", "stipend"],
+    "is_answerable": true
+  },
+  {
+    "id": "SF07",
+    "category": "simple_factual",
+    "question": "What is the employer 401(k) matching percentage provided by ACME Corp?",
+    "ground_truth": "ACME Corp provides a dollar-for-dollar match on employee contributions up to 5% of annual base salary.",
+    "target_sources": ["benefits_guide.pdf"],
+    "expected_keywords": ["5%", "match", "401(k)", "base salary"],
+    "is_answerable": true
+  },
+  {
+    "id": "SF08",
+    "category": "simple_factual",
+    "question": "What is the annual amount allocated for the wellness stipend?",
+    "ground_truth": "All full-time employees are eligible for an annual wellness stipend of $350 per calendar year.",
+    "target_sources": ["benefits_guide.pdf"],
+    "expected_keywords": ["$350", "wellness stipend", "calendar year"],
+    "is_answerable": true
+  },
+  {
+    "id": "SF09",
+    "category": "simple_factual",
+    "question": "How long is the fully paid parental leave provided by ACME Corp?",
+    "ground_truth": "ACME Corp provides 16 weeks of 100% fully paid parental leave for eligible new parents.",
+    "target_sources": ["benefits_guide.pdf"],
+    "expected_keywords": ["16 weeks", "paid parental leave", "100%"],
+    "is_answerable": true
+  },
+  {
+    "id": "SF10",
+    "category": "simple_factual",
+    "question": "What is the inactivity screen timeout limit required on employee devices?",
+    "ground_truth": "Screen timeouts must be set to lock automatically after a maximum of 5 minutes of inactivity.",
+    "target_sources": ["company_policy.txt"],
+    "expected_keywords": ["5 minutes", "inactivity", "screen timeout", "lock"],
+    "is_answerable": true
+  },
+
+  {
+    "id": "PA01",
+    "category": "paraphrased",
+    "question": "How much financial reimbursement is granted to remote workers for desk and chair purchases?",
+    "ground_truth": "All full-time employees can receive a one-time stipend of $500 to purchase ergonomic desks, monitors, or chairs.",
+    "target_sources": ["company_policy.txt"],
+    "expected_keywords": ["$500", "stipend", "ergonomic", "desks"],
+    "is_answerable": true
+  },
+  {
+    "id": "PA02",
+    "category": "paraphrased",
+    "question": "During which daily time window are staff expected to be online on communication channels?",
+    "ground_truth": "Employees must be available on Slack and email between 10:00 AM and 4:00 PM EST.",
+    "target_sources": ["company_policy.txt"],
+    "expected_keywords": ["10:00 AM", "4:00 PM", "EST", "Slack"],
+    "is_answerable": true
+  },
+  {
+    "id": "PA03",
+    "category": "paraphrased",
+    "question": "What is the annual vacation allowance for full-time team members?",
+    "ground_truth": "Full-time employees receive 20 days of Paid Time Off per calendar year.",
+    "target_sources": ["employee_handbook.pdf"],
+    "expected_keywords": ["20 days", "Paid Time Off", "PTO"],
+    "is_answerable": true
+  },
+  {
+    "id": "PA04",
+    "category": "paraphrased",
+    "question": "When are mid-year and year-end performance assessments conducted?",
+    "ground_truth": "Performance evaluations take place twice a year, specifically in June and December.",
+    "target_sources": ["employee_handbook.pdf"],
+    "expected_keywords": ["June", "December", "evaluations"],
+    "is_answerable": true
+  },
+  {
+    "id": "PA05",
+    "category": "paraphrased",
+    "question": "How many coworker approvals are mandatory to merge code into the production branch?",
+    "ground_truth": "A minimum of two approving peer reviews is required before merging code into main.",
+    "target_sources": ["engineering_handbook.txt"],
+    "expected_keywords": ["two", "approving", "peer reviews"],
+    "is_answerable": true
+  },
+  {
+    "id": "PA06",
+    "category": "paraphrased",
+    "question": "What monetary compensation is paid to engineers serving primary incident duty each week?",
+    "ground_truth": "Engineers on primary on-call rotation receive a weekly base stipend of $300.",
+    "target_sources": ["engineering_handbook.txt"],
+    "expected_keywords": ["$300", "weekly", "on-call", "primary"],
+    "is_answerable": true
+  },
+  {
+    "id": "PA07",
+    "category": "paraphrased",
+    "question": "To what extent does the employer match retirement contributions into Fidelity accounts?",
+    "ground_truth": "ACME Corp matches employee 401(k) contributions 100% dollar-for-dollar up to 5% of base salary.",
+    "target_sources": ["benefits_guide.pdf"],
+    "expected_keywords": ["5%", "dollar-for-dollar", "match", "401(k)"],
+    "is_answerable": true
+  },
+  {
+    "id": "PA08",
+    "category": "paraphrased",
+    "question": "How much gym and health reimbursement can employees claim every year?",
+    "ground_truth": "Full-time employees can claim up to $350 per calendar year under the wellness stipend.",
+    "target_sources": ["benefits_guide.pdf"],
+    "expected_keywords": ["$350", "wellness", "calendar year"],
+    "is_answerable": true
+  },
+  {
+    "id": "PA09",
+    "category": "paraphrased",
+    "question": "How many weeks of leave are granted to mothers and fathers after having a newborn or adopted child?",
+    "ground_truth": "ACME Corp provides 16 weeks of 100% paid parental leave for birthing, non-birthing, and adoptive parents.",
+    "target_sources": ["benefits_guide.pdf"],
+    "expected_keywords": ["16 weeks", "parental leave", "paid"],
+    "is_answerable": true
+  },
+  {
+    "id": "PA10",
+    "category": "paraphrased",
+    "question": "Within what timeframe must an employee report a misplaced work laptop?",
+    "ground_truth": "Employees must notify security@acme.com within 2 hours of a lost or stolen laptop.",
+    "target_sources": ["company_policy.txt"],
+    "expected_keywords": ["2 hours", "lost", "security@acme.com", "laptop"],
+    "is_answerable": true
+  },
+
+  {
+    "id": "KW01",
+    "category": "keyword_exact",
+    "question": "What is the policy regarding FileVault or BitLocker encryption?",
+    "ground_truth": "All laptops and mobile devices accessing corporate services must have FileVault or BitLocker full-disk encryption enabled.",
+    "target_sources": ["company_policy.txt"],
+    "expected_keywords": ["FileVault", "BitLocker", "full-disk encryption"],
+    "is_answerable": true
+  },
+  {
+    "id": "KW02",
+    "category": "keyword_exact",
+    "question": "What is the initial response SLA and update frequency for a SEV-1 incident?",
+    "ground_truth": "SEV-1 incidents require an initial response within 15 minutes and updates every 30 minutes.",
+    "target_sources": ["engineering_handbook.txt"],
+    "expected_keywords": ["SEV-1", "15 minutes", "30 minutes", "outage"],
+    "is_answerable": true
+  },
+  {
+    "id": "KW03",
+    "category": "keyword_exact",
+    "question": "What are the specific dates for the year-end deployment freeze?",
+    "ground_truth": "The year-end deployment freeze is enforced from December 15 through January 3.",
+    "target_sources": ["engineering_handbook.txt"],
+    "expected_keywords": ["deployment freeze", "December 15", "January 3"],
+    "is_answerable": true
+  },
+  {
+    "id": "KW04",
+    "category": "keyword_exact",
+    "question": "What is the individual deductible and HSA company contribution for the Silver HDHP Plan?",
+    "ground_truth": "The Silver HDHP Plan has a $1,500 individual deductible and includes a $750 annual company HSA contribution.",
+    "target_sources": ["benefits_guide.pdf"],
+    "expected_keywords": ["Silver HDHP", "$1,500", "$750", "HSA"],
+    "is_answerable": true
+  },
+  {
+    "id": "KW05",
+    "category": "keyword_exact",
+    "question": "What is the baby bonding bonus amount upon commencing parental leave?",
+    "ground_truth": "New parents receive a one-time $1,000 baby bonding bonus upon commencement of parental leave.",
+    "target_sources": ["benefits_guide.pdf"],
+    "expected_keywords": ["$1,000", "baby bonding bonus", "parental leave"],
+    "is_answerable": true
+  },
+  {
+    "id": "KW06",
+    "category": "keyword_exact",
+    "question": "What is the maximum line count recommendation for pull requests?",
+    "ground_truth": "Pull requests should not exceed 400 lines of modified code.",
+    "target_sources": ["engineering_handbook.txt"],
+    "expected_keywords": ["400 lines", "pull requests", "modified code"],
+    "is_answerable": true
+  },
+  {
+    "id": "KW07",
+    "category": "keyword_exact",
+    "question": "When does the weekly engineering on-call rotation start?",
+    "ground_truth": "On-call rotations operate on a 7-day cycle starting Tuesdays at 10:00 AM EST.",
+    "target_sources": ["engineering_handbook.txt"],
+    "expected_keywords": ["Tuesdays", "10:00 AM EST", "on-call", "7-day"],
+    "is_answerable": true
+  },
+  {
+    "id": "KW08",
+    "category": "keyword_exact",
+    "question": "What is the individual deductible and primary care copay for the Gold PPO Plan?",
+    "ground_truth": "The Gold PPO Plan has a $500 individual deductible, 90% in-network coverage, and a $20 primary care copay.",
+    "target_sources": ["benefits_guide.pdf"],
+    "expected_keywords": ["Gold PPO", "$500", "90%", "$20 copay"],
+    "is_answerable": true
+  },
+  {
+    "id": "KW09",
+    "category": "keyword_exact",
+    "question": "What email address is used to report lost hardware or security incidents?",
+    "ground_truth": "Lost or stolen laptops must be reported to security@acme.com within 2 hours.",
+    "target_sources": ["company_policy.txt"],
+    "expected_keywords": ["security@acme.com", "2 hours"],
+    "is_answerable": true
+  },
+  {
+    "id": "KW10",
+    "category": "keyword_exact",
+    "question": "How many days of sick leave are provided annually and do they roll over?",
+    "ground_truth": "Sick leave is allocated as 10 separate days per calendar year and does not roll over.",
+    "target_sources": ["employee_handbook.pdf"],
+    "expected_keywords": ["10 separate days", "sick leave", "does not roll over"],
+    "is_answerable": true
+  },
+
+  {
+    "id": "NU01",
+    "category": "numerical",
+    "question": "How many days of unused PTO can be carried over into the next calendar year?",
+    "ground_truth": "A maximum of 5 days of unused PTO can be carried over into the next calendar year.",
+    "target_sources": ["employee_handbook.pdf"],
+    "expected_keywords": ["5 days", "carried over", "PTO"],
+    "is_answerable": true
+  },
+  {
+    "id": "NU02",
+    "category": "numerical",
+    "question": "What is the monthly PTO accrual rate for full-time employees?",
+    "ground_truth": "PTO is accrued monthly at a rate of 1.66 days per month.",
+    "target_sources": ["employee_handbook.pdf"],
+    "expected_keywords": ["1.66 days", "monthly", "accrued"],
+    "is_answerable": true
+  },
+  {
+    "id": "NU03",
+    "category": "numerical",
+    "question": "Within how many days of joining must equipment stipend reimbursement claims be submitted?",
+    "ground_truth": "Reimbursement claims must be submitted within 60 days of the employee's start date.",
+    "target_sources": ["company_policy.txt"],
+    "expected_keywords": ["60 days", "start date", "reimbursement"],
+    "is_answerable": true
+  },
+  {
+    "id": "NU04",
+    "category": "numerical",
+    "question": "What is the vesting percentage for 401(k) company matching after 2 years of service?",
+    "ground_truth": "Company matching contributions are 66% vested after Year 2 of service.",
+    "target_sources": ["benefits_guide.pdf"],
+    "expected_keywords": ["66%", "Year 2", "vested", "401(k)"],
+    "is_answerable": true
+  },
+  {
+    "id": "NU05",
+    "category": "numerical",
+    "question": "What is the weekly stipend for a secondary on-call engineer?",
+    "ground_truth": "Secondary on-call engineers receive a $150 weekly stipend for standby escalation.",
+    "target_sources": ["engineering_handbook.txt"],
+    "expected_keywords": ["$150", "weekly", "secondary on-call"],
+    "is_answerable": true
+  },
+  {
+    "id": "NU06",
+    "category": "numerical",
+    "question": "What is the initial response SLA for a SEV-2 incident?",
+    "ground_truth": "For SEV-2 incidents, the initial response SLA is within 30 minutes, with updates every 1 hour.",
+    "target_sources": ["engineering_handbook.txt"],
+    "expected_keywords": ["SEV-2", "30 minutes", "1 hour"],
+    "is_answerable": true
+  },
+  {
+    "id": "NU07",
+    "category": "numerical",
+    "question": "What is the initial response time requirement for a SEV-3 incident?",
+    "ground_truth": "For SEV-3 incidents, initial response is required within 4 hours during normal business hours.",
+    "target_sources": ["engineering_handbook.txt"],
+    "expected_keywords": ["SEV-3", "4 hours", "business hours"],
+    "is_answerable": true
+  },
+  {
+    "id": "NU08",
+    "category": "numerical",
+    "question": "What user percentage threshold defines a SEV-1 critical outage?",
+    "ground_truth": "A SEV-1 incident is defined as a critical outage affecting greater than 25% of users.",
+    "target_sources": ["engineering_handbook.txt"],
+    "expected_keywords": [">25%", "25%", "users", "SEV-1"],
+    "is_answerable": true
+  },
+  {
+    "id": "NU09",
+    "category": "numerical",
+    "question": "When do merit-based salary adjustments from year-end reviews take effect?",
+    "ground_truth": "Merit-based salary adjustments take effect on February 1.",
+    "target_sources": ["employee_handbook.pdf"],
+    "expected_keywords": ["February 1", "salary adjustments", "merit"],
+    "is_answerable": true
+  },
+  {
+    "id": "NU10",
+    "category": "numerical",
+    "question": "What are the allowed deployment hours on standard deployment days (Monday-Thursday)?",
+    "ground_truth": "Standard deployment windows are between 9:00 AM and 2:00 PM EST.",
+    "target_sources": ["engineering_handbook.txt"],
+    "expected_keywords": ["9:00 AM", "2:00 PM", "EST", "deployment"],
+    "is_answerable": true
+  },
+
+  {
+    "id": "MH01",
+    "category": "multi_hop",
+    "question": "If a primary on-call engineer works a shift on a corporate holiday, what total compensation do they receive for that week?",
+    "ground_truth": "They receive a base weekly stipend of $300 plus an additional $100 holiday shift compensation, totaling $400 for that week.",
+    "target_sources": ["engineering_handbook.txt"],
+    "expected_keywords": ["$300", "$100", "$400", "on-call", "holiday"],
+    "is_answerable": true
+  },
+  {
+    "id": "MH02",
+    "category": "multi_hop",
+    "question": "If an employee joins on January 1 and leaves on December 31 with 12 days unused PTO, how many days roll over and how many are forfeited?",
+    "ground_truth": "Up to 5 days of unused PTO can be carried over, and the remaining 7 unused days are forfeited on December 31.",
+    "target_sources": ["employee_handbook.pdf"],
+    "expected_keywords": ["5 days", "carry over", "forfeited", "PTO"],
+    "is_answerable": true
+  },
+  {
+    "id": "MH03",
+    "category": "multi_hop",
+    "question": "What happens if a severe outage affecting 30% of users occurs on a Friday?",
+    "ground_truth": "Because it affects >25% of users, it is a SEV-1 incident, and Friday deployments are permitted for critical SEV-1 emergency hotfixes.",
+    "target_sources": ["engineering_handbook.txt"],
+    "expected_keywords": ["SEV-1", "Friday", "emergency hotfixes", "15 minutes"],
+    "is_answerable": true
+  },
+  {
+    "id": "MH04",
+    "category": "multi_hop",
+    "question": "How can an employee obtain ergonomic office equipment both at the corporate office and at home?",
+    "ground_truth": "For office facilities, ergonomic assessments are requested via facilities@acme.com; for home offices, employees use the $500 one-time setup stipend.",
+    "target_sources": ["company_policy.txt", "employee_handbook.pdf"],
+    "expected_keywords": ["facilities@acme.com", "$500", "stipend", "ergonomic"],
+    "is_answerable": true
+  },
+  {
+    "id": "MH05",
+    "category": "multi_hop",
+    "question": "How much total employer 401k contribution does an employee with a $100,000 salary get after 3 years if they contribute 5% annually?",
+    "ground_truth": "The employer contributes 5% ($5,000/year, totaling $15,000 across 3 years), and after Year 3 it is 100% fully vested.",
+    "target_sources": ["benefits_guide.pdf"],
+    "expected_keywords": ["5%", "100%", "vested", "Year 3", "match"],
+    "is_answerable": true
+  },
+  {
+    "id": "MH06",
+    "category": "multi_hop",
+    "question": "What is the process and timeline if an employee's encrypted corporate laptop is stolen at an airport?",
+    "ground_truth": "The employee must notify security@acme.com within 2 hours, and IT Security will immediately initiate remote device wipe protocols.",
+    "target_sources": ["company_policy.txt"],
+    "expected_keywords": ["2 hours", "security@acme.com", "remote wipe", "stolen"],
+    "is_answerable": true
+  },
+  {
+    "id": "MH07",
+    "category": "multi_hop",
+    "question": "Can an engineer deploy a non-urgent UI bug fix on December 20th?",
+    "ground_truth": "No, because the annual deployment freeze is enforced from December 15 through January 3 for system stability.",
+    "target_sources": ["engineering_handbook.txt"],
+    "expected_keywords": ["deployment freeze", "December 15", "January 3"],
+    "is_answerable": true
+  },
+  {
+    "id": "MH08",
+    "category": "multi_hop",
+    "question": "In what ways can an adoptive parent schedule their paid parental leave?",
+    "ground_truth": "Adoptive parents receive 16 weeks of 100% paid leave, which can be taken continuously or in two separate blocks within the first 12 months.",
+    "target_sources": ["benefits_guide.pdf"],
+    "expected_keywords": ["16 weeks", "two separate blocks", "12 months", "adoptive"],
+    "is_answerable": true
+  },
+  {
+    "id": "MH09",
+    "category": "multi_hop",
+    "question": "If an engineer writes a 600-line pull request, what must they do according to code standards?",
+    "ground_truth": "Pull requests should not exceed 400 lines of modified code to ensure attentive review, so the PR should be broken down into smaller pieces.",
+    "target_sources": ["engineering_handbook.txt"],
+    "expected_keywords": ["400 lines", "pull requests", "review"],
+    "is_answerable": true
+  },
+  {
+    "id": "MH10",
+    "category": "multi_hop",
+    "question": "What health insurance plan should an employee choose if they want a lower monthly cost and company HSA funding?",
+    "ground_truth": "They should select the Silver HDHP Plan, which comes with a $750 annual company HSA contribution.",
+    "target_sources": ["benefits_guide.pdf"],
+    "expected_keywords": ["Silver HDHP", "$750", "HSA"],
+    "is_answerable": true
+  },
+
+  {
+    "id": "CD01",
+    "category": "cross_document",
+    "question": "Compare the home office equipment stipend in the Company Policy with the wellness stipend in the Benefits Guide.",
+    "ground_truth": "The home office equipment stipend is a one-time $500 reimbursement for desks/monitors within 60 days of hire, whereas the wellness stipend is an annual $350 allowance for fitness/mental health.",
+    "target_sources": ["company_policy.txt", "benefits_guide.pdf"],
+    "expected_keywords": ["$500", "one-time", "$350", "annual", "wellness"],
+    "is_answerable": true
+  },
+  {
+    "id": "CD02",
+    "category": "cross_document",
+    "question": "How do core collaboration hours in Company Policy align with the engineering on-call rotation handoff time?",
+    "ground_truth": "Both reference 10:00 AM EST: core hours begin at 10:00 AM EST on Slack/email, and the weekly engineering on-call rotation starts on Tuesdays at 10:00 AM EST.",
+    "target_sources": ["company_policy.txt", "engineering_handbook.txt"],
+    "expected_keywords": ["10:00 AM EST", "core hours", "on-call", "Tuesdays"],
+    "is_answerable": true
+  },
+  {
+    "id": "CD03",
+    "category": "cross_document",
+    "question": "What are all the financial stipends and bonuses an employee could potentially receive according to the policies?",
+    "ground_truth": "Stipends include $500 home office equipment, $350 annual wellness, $300 weekly primary on-call, $150 weekly secondary on-call, $100 holiday on-call shift, and $1,000 baby bonding bonus.",
+    "target_sources": ["company_policy.txt", "benefits_guide.pdf", "engineering_handbook.txt"],
+    "expected_keywords": ["$500", "$350", "$300", "$150", "$1,000", "stipend"],
+    "is_answerable": true
+  },
+  {
+    "id": "CD04",
+    "category": "cross_document",
+    "question": "Compare the paid time off allocation in the Employee Handbook with the paid parental leave in the Benefits Guide.",
+    "ground_truth": "Full-time employees receive 20 days (4 weeks) of annual PTO, while new parents receive 16 weeks of 100% paid parental leave.",
+    "target_sources": ["employee_handbook.pdf", "benefits_guide.pdf"],
+    "expected_keywords": ["20 days", "16 weeks", "PTO", "parental leave"],
+    "is_answerable": true
+  },
+  {
+    "id": "CD05",
+    "category": "cross_document",
+    "question": "How do the December review timelines in the Handbook interact with the engineering deployment freeze?",
+    "ground_truth": "Year-end performance reviews take place in December, coinciding with the annual deployment freeze enforced from December 15 through January 3.",
+    "target_sources": ["employee_handbook.pdf", "engineering_handbook.txt"],
+    "expected_keywords": ["December", "performance reviews", "deployment freeze", "December 15"],
+    "is_answerable": true
+  },
+  {
+    "id": "CD06",
+    "category": "cross_document",
+    "question": "What health, ergonomic, and wellness benefits are provided across ACME Corp documents?",
+    "ground_truth": "Benefits include Gold/Silver health plans, dental/vision, office ergonomic assessments, $500 home office stipend, and $350 annual wellness stipend.",
+    "target_sources": ["company_policy.txt", "employee_handbook.pdf", "benefits_guide.pdf"],
+    "expected_keywords": ["Gold", "Silver", "ergonomic", "$500", "$350"],
+    "is_answerable": true
+  },
+  {
+    "id": "CD07",
+    "category": "cross_document",
+    "question": "Which policies outline required actions regarding ethics, harassment, and data security compliance?",
+    "ground_truth": "The Employee Handbook covers ethics, non-discrimination, and reporting compliance concerns, while Company Policy mandates VPN, encryption, and 2-hour lost laptop reporting.",
+    "target_sources": ["company_policy.txt", "employee_handbook.pdf"],
+    "expected_keywords": ["Code of Conduct", "Ethics", "VPN", "security@acme.com"],
+    "is_answerable": true
+  },
+  {
+    "id": "CD08",
+    "category": "cross_document",
+    "question": "Contrast the sick leave policy with the annual PTO rollover rules.",
+    "ground_truth": "PTO permits carrying over up to 5 unused days into the next year, whereas the 10 sick leave days do not roll over.",
+    "target_sources": ["employee_handbook.pdf"],
+    "expected_keywords": ["5 days", "carry over", "10", "sick leave", "does not roll over"],
+    "is_answerable": true
+  },
+  {
+    "id": "CD09",
+    "category": "cross_document",
+    "question": "How are performance evaluation outcomes linked to monetary compensation changes?",
+    "ground_truth": "Year-end reviews in December evaluate achievements to determine merit-based salary adjustments and annual bonuses effective February 1.",
+    "target_sources": ["employee_handbook.pdf"],
+    "expected_keywords": ["December", "merit-based", "bonuses", "February 1"],
+    "is_answerable": true
+  },
+  {
+    "id": "CD10",
+    "category": "cross_document",
+    "question": "What network and code security restrictions apply to engineers accessing repositories remotely?",
+    "ground_truth": "Remote engineers must use company VPN and encrypted Wi-Fi, have full-disk encryption enabled, and pass CI testing and 2 peer reviews before merging.",
+    "target_sources": ["company_policy.txt", "engineering_handbook.txt"],
+    "expected_keywords": ["VPN", "FileVault", "BitLocker", "peer reviews", "CI"],
+    "is_answerable": true
+  },
+
+  {
+    "id": "UA01",
+    "category": "unanswerable",
+    "question": "What is the company policy on pet insurance reimbursement for dogs and cats?",
+    "ground_truth": "I don't know based on the provided documents.",
+    "target_sources": [],
+    "expected_keywords": ["I don't know based on the provided documents."],
+    "is_answerable": false
+  },
+  {
+    "id": "UA02",
+    "category": "unanswerable",
+    "question": "What is the maximum budget allowed for employee international business travel flights?",
+    "ground_truth": "I don't know based on the provided documents.",
+    "target_sources": [],
+    "expected_keywords": ["I don't know based on the provided documents."],
+    "is_answerable": false
+  },
+  {
+    "id": "UA03",
+    "category": "unanswerable",
+    "question": "How many shares of stock options (ISO) are granted to senior software engineers upon hiring?",
+    "ground_truth": "I don't know based on the provided documents.",
+    "target_sources": [],
+    "expected_keywords": ["I don't know based on the provided documents."],
+    "is_answerable": false
+  },
+  {
+    "id": "UA04",
+    "category": "unanswerable",
+    "question": "What brand of coffee machine is provided in the break room on the 3rd floor?",
+    "ground_truth": "I don't know based on the provided documents.",
+    "target_sources": [],
+    "expected_keywords": ["I don't know based on the provided documents."],
+    "is_answerable": false
+  },
+  {
+    "id": "UA05",
+    "category": "unanswerable",
+    "question": "What is the tuition reimbursement cap for employees pursuing a Master's degree in Computer Science?",
+    "ground_truth": "I don't know based on the provided documents.",
+    "target_sources": [],
+    "expected_keywords": ["I don't know based on the provided documents."],
+    "is_answerable": false
+  },
+  {
+    "id": "UA06",
+    "category": "unanswerable",
+    "question": "What are the rules for bringing personal bicycles inside the office building?",
+    "ground_truth": "I don't know based on the provided documents.",
+    "target_sources": [],
+    "expected_keywords": ["I don't know based on the provided documents."],
+    "is_answerable": false
+  },
+  {
+    "id": "UA07",
+    "category": "unanswerable",
+    "question": "Which programming languages are banned from use in microservices at ACME Corp?",
+    "ground_truth": "I don't know based on the provided documents.",
+    "target_sources": [],
+    "expected_keywords": ["I don't know based on the provided documents."],
+    "is_answerable": false
+  },
+  {
+    "id": "UA08",
+    "category": "unanswerable",
+    "question": "How much does the company reimburse for monthly mobile phone cell carrier bills?",
+    "ground_truth": "I don't know based on the provided documents.",
+    "target_sources": [],
+    "expected_keywords": ["I don't know based on the provided documents."],
+    "is_answerable": false
+  },
+  {
+    "id": "UA09",
+    "category": "unanswerable",
+    "question": "What is the relocation package dollar amount for new hires moving across states?",
+    "ground_truth": "I don't know based on the provided documents.",
+    "target_sources": [],
+    "expected_keywords": ["I don't know based on the provided documents."],
+    "is_answerable": false
+  },
+  {
+    "id": "UA10",
+    "category": "unanswerable",
+    "question": "What is the corporate discount percentage on Apple laptops purchased for personal use?",
+    "ground_truth": "I don't know based on the provided documents.",
+    "target_sources": [],
+    "expected_keywords": ["I don't know based on the provided documents."],
+    "is_answerable": false
+  },
+
+  {
+    "id": "FO01",
+    "category": "conversational_followup",
+    "question": "What about the second health plan option?",
+    "ground_truth": "The Silver HDHP Plan has a $1,500 individual deductible and includes an annual company HSA contribution of $750.",
+    "target_sources": ["benefits_guide.pdf"],
+    "expected_keywords": ["Silver HDHP", "$1,500", "$750", "HSA"],
+    "is_answerable": true
+  },
+  {
+    "id": "FO02",
+    "category": "conversational_followup",
+    "question": "How much was that setup stipend again?",
+    "ground_truth": "The home office hardware setup stipend is $500.",
+    "target_sources": ["company_policy.txt"],
+    "expected_keywords": ["$500", "stipend", "home office"],
+    "is_answerable": true
+  },
+  {
+    "id": "FO03",
+    "category": "conversational_followup",
+    "question": "And how many days can I roll over to next year?",
+    "ground_truth": "Up to a maximum of 5 days of unused PTO can be carried over into the next calendar year.",
+    "target_sources": ["employee_handbook.pdf"],
+    "expected_keywords": ["5 days", "carry over", "PTO"],
+    "is_answerable": true
+  },
+  {
+    "id": "FO04",
+    "category": "conversational_followup",
+    "question": "What is the SLA if the severity is level 2 instead?",
+    "ground_truth": "For SEV-2 incidents, the initial response SLA is within 30 minutes, with updates every 1 hour.",
+    "target_sources": ["engineering_handbook.txt"],
+    "expected_keywords": ["SEV-2", "30 minutes", "1 hour"],
+    "is_answerable": true
+  },
+  {
+    "id": "FO05",
+    "category": "conversational_followup",
+    "question": "What if it happens during a holiday shift?",
+    "ground_truth": "If an engineer resolves an incident on a corporate holiday, they receive an additional $100 per holiday shift.",
+    "target_sources": ["engineering_handbook.txt"],
+    "expected_keywords": ["$100", "holiday shift", "on-call"],
+    "is_answerable": true
+  },
+  {
+    "id": "FO06",
+    "category": "conversational_followup",
+    "question": "When does the vesting reach 100 percent for the 401k?",
+    "ground_truth": "Company matching contributions become 100% fully vested after Year 3 of service.",
+    "target_sources": ["benefits_guide.pdf"],
+    "expected_keywords": ["100%", "Year 3", "vested", "401(k)"],
+    "is_answerable": true
+  },
+  {
+    "id": "FO07",
+    "category": "conversational_followup",
+    "question": "Who do I contact if my laptop is stolen?",
+    "ground_truth": "Employees must notify security@acme.com within 2 hours.",
+    "target_sources": ["company_policy.txt"],
+    "expected_keywords": ["security@acme.com", "2 hours", "stolen"],
+    "is_answerable": true
+  },
+  {
+    "id": "FO08",
+    "category": "conversational_followup",
+    "question": "Can I take that leave in two separate parts?",
+    "ground_truth": "Yes, 16-week parental leave can be taken continuously or in two separate blocks within the first 12 months.",
+    "target_sources": ["benefits_guide.pdf"],
+    "expected_keywords": ["two separate blocks", "16 weeks", "12 months"],
+    "is_answerable": true
+  },
+  {
+    "id": "FO09",
+    "category": "conversational_followup",
+    "question": "What is the cutoff date in December when deployments stop?",
+    "ground_truth": "The year-end deployment freeze begins on December 15 and lasts through January 3.",
+    "target_sources": ["engineering_handbook.txt"],
+    "expected_keywords": ["December 15", "January 3", "deployment freeze"],
+    "is_answerable": true
+  },
+  {
+    "id": "FO10",
+    "category": "conversational_followup",
+    "question": "When does that June review take place and what is its focus?",
+    "ground_truth": "Mid-year reviews take place in June and focus on goal calibration and feedback.",
+    "target_sources": ["employee_handbook.pdf"],
+    "expected_keywords": ["June", "goal calibration", "mid-year"],
+    "is_answerable": true
+  }
+]

@@ -1,0 +1,36 @@
+{
+  "timestamp": "20260910_123434",
+  "subset_size": 50,
+  "models": {
+    "GPT-OSS 120B": {
+      "model_name": "openai/gpt-oss-120b",
+      "faithfulness": 0.758074,
+      "answer_relevancy": 0.76267,
+      "context_precision": 0.85,
+      "context_recall": 0.938496,
+      "abstention_accuracy": 1.0,
+      "avg_gen_latency_ms": 4328.211318000103,
+      "avg_total_latency_ms": 4975.292929999414
+    },
+    "GPT-OSS 20B": {
+      "model_name": "openai/gpt-oss-20b",
+      "faithfulness": 0.7855679999999999,
+      "answer_relevancy": 0.782544,
+      "context_precision": 0.85,
+      "context_recall": 0.938496,
+      "abstention_accuracy": 1.0,
+      "avg_gen_latency_ms": 4272.1121019999555,
+      "avg_total_latency_ms": 4919.193713999266
+    },
+    "Qwen 3.6 27B": {
+      "model_name": "qwen/qwen3.6-27b",
+      "faithfulness": 0.524326,
+      "answer_relevancy": 0.46165,
+      "context_precision": 0.85,
+      "context_recall": 0.938496,
+      "abstention_accuracy": 1.0,
+      "avg_gen_latency_ms": 19503.95688799923,
+      "avg_total_latency_ms": 20151.03849999854
+    }
+  }
+}

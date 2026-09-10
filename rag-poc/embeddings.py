@@ -98,6 +98,25 @@ def add_documents_to_vector_store(
     return vector_store
 
 
+def get_all_documents_from_vector_store(
+    persist_directory: str = CHROMA_PERSIST_DIR,
+    collection_name: str = CHROMA_COLLECTION_NAME,
+) -> List[Document]:
+    """
+    Retrieves all indexed Document objects directly from the persistent ChromaDB collection.
+    """
+    try:
+        vs = get_vector_store(persist_directory, collection_name)
+        data = vs.get()
+        docs = []
+        if data and "documents" in data and data["documents"]:
+            for text, meta in zip(data.get("documents", []), data.get("metadatas", [])):
+                docs.append(Document(page_content=text, metadata=meta or {}))
+        return docs
+    except Exception:
+        return []
+
+
 def dense_similarity_search(
     query: str,
     top_k: int = TOP_K_DENSE,

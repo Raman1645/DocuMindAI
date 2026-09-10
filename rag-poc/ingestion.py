@@ -8,7 +8,7 @@ Enriches chunk metadata with source filenames, page numbers, and unique chunk ID
 
 import os
 from pathlib import Path
-from typing import List, Union
+from typing import List, Union, Optional, Tuple
 
 from langchain_core.documents import Document
 from langchain_community.document_loaders import PyPDFLoader, TextLoader
@@ -51,24 +51,29 @@ def load_document(file_path: Union[str, Path]) -> List[Document]:
     return documents
 
 
+import time
+from deduplication import compute_file_hash, DocumentRegistry
+
+
 def chunk_documents(
     documents: List[Document],
     chunk_size: int = CHUNK_SIZE,
-    chunk_overlap: int = CHUNK_OVERLAP
+    chunk_overlap: int = CHUNK_OVERLAP,
+    doc_hash: Optional[str] = None,
 ) -> List[Document]:
     """
     Splits loaded documents into smaller overlapping chunks using RecursiveCharacterTextSplitter.
-    Attaches standardized metadata ('source', 'page', 'chunk_index', 'chunk_id') to every chunk.
+    Attaches standardized metadata ('source', 'page', 'chunk_index', 'chunk_id', 'doc_hash', 'char_count') to every chunk.
     
     Args:
         documents: List of raw loaded Document objects.
         chunk_size: Maximum characters per chunk.
         chunk_overlap: Overlap between consecutive chunks.
+        doc_hash: Optional SHA-256 hash of the parent file.
         
     Returns:
         List[Document]: List of chunked Document objects ready for vector embedding.
     """
-    # RecursiveCharacterTextSplitter attempts to split by paragraph ("\n\n"), line ("\n"), space (" "), then char ("")
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size,
         chunk_overlap=chunk_overlap,
@@ -78,24 +83,29 @@ def chunk_documents(
     
     raw_chunks = splitter.split_documents(documents)
     processed_chunks: List[Document] = []
+    timestamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     
-    # Enforce consistent metadata fields across PDF and TXT sources
     for idx, chunk in enumerate(raw_chunks):
         source_name = Path(chunk.metadata.get("source", "unknown")).name
-        
-        # PyPDFLoader records 'page' as 0-indexed integer; normalize to 1-indexed for human display
         raw_page = chunk.metadata.get("page", 0)
         page_num = raw_page + 1 if isinstance(raw_page, int) else 1
         
-        # Construct unique identifier for every chunk
-        chunk_id = f"{source_name}_p{page_num}_c{idx}"
+        # Construct deterministic unique identifier for every chunk incorporating hash if present
+        if doc_hash:
+            chunk_id = f"{source_name}_{doc_hash[:8]}_p{page_num}_c{idx}"
+        else:
+            chunk_id = f"{source_name}_p{page_num}_c{idx}"
         
         updated_metadata = {
             **chunk.metadata,
             "source": source_name,
+            "file_name": source_name,
             "page": page_num,
             "chunk_index": idx,
             "chunk_id": chunk_id,
+            "doc_hash": doc_hash or "unhashed",
+            "char_count": len(chunk.page_content),
+            "ingested_at": timestamp,
         }
         
         processed_chunks.append(
@@ -105,19 +115,58 @@ def chunk_documents(
     return processed_chunks
 
 
-def ingest_file(file_path: Union[str, Path]) -> List[Document]:
+def ingest_file(
+    file_path: Union[str, Path],
+    chunk_size: int = CHUNK_SIZE,
+    chunk_overlap: int = CHUNK_OVERLAP,
+) -> List[Document]:
     """
-    End-to-end convenience pipeline function: loads document and splits into metadata-annotated chunks.
+    Loads document, computes SHA-256 hash, and splits into metadata-annotated chunks.
     
     Args:
         file_path: Path to the target PDF/TXT document.
+        chunk_size: Maximum characters per chunk.
+        chunk_overlap: Overlap between consecutive chunks.
         
     Returns:
         List[Document]: List of processed chunks.
     """
+    file_path = Path(file_path).resolve()
+    doc_hash = compute_file_hash(file_path) if file_path.exists() else None
     raw_docs = load_document(file_path)
-    chunks = chunk_documents(raw_docs)
+    chunks = chunk_documents(raw_docs, chunk_size=chunk_size, chunk_overlap=chunk_overlap, doc_hash=doc_hash)
     return chunks
+
+
+def ingest_file_idempotent(
+    file_path: Union[str, Path],
+    registry: Optional[DocumentRegistry] = None,
+    chunk_size: int = CHUNK_SIZE,
+    chunk_overlap: int = CHUNK_OVERLAP,
+) -> Tuple[List[Document], bool]:
+    """
+    Idempotently ingests a file.
+    If the file hash has already been registered, returns ([], False) to prevent duplicate indexing.
+    Otherwise parses the document, registers the hash, and returns (chunks, True).
+    
+    Returns:
+        Tuple[List[Document], bool]: (chunks_list, was_newly_indexed).
+    """
+    file_path = Path(file_path).resolve()
+    if registry is None:
+        registry = DocumentRegistry()
+
+    doc_hash = compute_file_hash(file_path)
+    if registry.is_indexed(doc_hash):
+        return [], False
+
+    chunks = ingest_file(file_path, chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+    registry.register(
+        doc_hash=doc_hash,
+        file_name=file_path.name,
+        chunk_count=len(chunks),
+    )
+    return chunks, True
 
 
 if __name__ == "__main__":
